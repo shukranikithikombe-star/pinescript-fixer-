@@ -1,0 +1,8 @@
+{
+  "name": "PineFix V3 - Redmi 14C TradingView Editor",
+  "short_name": "PineFix",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#131722",
+  "theme_color": "#2962ff"
+}
