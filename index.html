@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PineFix - TradingView Clone for Redmi 14C</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2962ff">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/theme/dracula.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#131722;color:#d1d4dc;font-family:system-ui;height:100vh;display:flex;flex-direction:column}
+.top{background:#1e222d;border-bottom:1px solid #2a2e39;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.title{font-size:14px;font-weight:700;color:#fff}
+.btn{background:#2962ff;color:#fff;border:0;padding:7px 12px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer}
+.btn-green{background:#26a69a}
+.btn-dark{background:#2a2e39}
+.wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.CodeMirror{flex:1;height:auto !important;font-size:13px}
+.bar{background:#1e222d;padding:6px 10px;border-top:1px solid #2a2e39;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.error-panel{background:#1e222d;border-top:2px solid #ef5350;padding:8px 12px;min-height:100px;max-height:35%;overflow:auto}
+.err{font-family:monospace;font-size:11px;color:#ffb4b4;background:#2a1a1a;padding:5px;border-radius:4px;margin:4px 0}
+.tools{display:flex;gap:6px;padding:8px;background:#1e222d;border-top:1px solid #2a2e39}
+.tool{flex:1;background:#2a2e39;color:#d1d4dc;border:1px solid #363a45;padding:10px;border-radius:6px;font-size:11px;font-weight:600}
+.tool-primary{background:#2962ff;color:#fff}
+input[type=file]{font-size:11px;color:#9aa3b2;max-width:160px}
+</style>
+</head>
+<body>
+<div class="top">
+<div class="title">🌲 Pine Editor • Redmi 14C Fixer</div>
+<div style="display:flex;gap:6px">
+<button class="btn btn-dark" onclick="pasteClip()">📋 PASTE</button>
+<button class="btn btn-green" onclick="fixCode()">✨ Fix for Redmi 14C</button>
+<button class="btn" onclick="copyCode()">Copy Fixed</button>
+</div>
+</div>
+<div class="bar">
+<input type="file" id="imgIn" accept="image/*">
+<button class="btn btn-dark" onclick="readShot()">📸 Read Error Screenshot</button>
+<span id="ocrStatus" style="font-size:10px;color:#9aa3b2"></span>
+</div>
+<div class="wrap">
+<textarea id="codeArea">//@version=6
+indicator("TEVV12 SMC", overlay=true)
+bullSweep=low<swingLow and close>swingLow
+if bullSweep
+    entry=close
+    box.new(left=bar_index,top=entry,right=bar_index+20,bottom=low)</textarea>
+</div>
+<div class="tools">
+<button class="tool" onclick="loadFixes()">📄 Load fixes.json</button>
+<button class="tool tool-primary" onclick="copyCode()">📋 COPY FIXED CODE</button>
+<button class="tool" onclick="clearErr()">Clear Console</button>
+</div>
+<div class="error-panel" id="errPanel">
+<div style="font-size:11px;font-weight:700;color:#ef5350;margin-bottom:6px">Console — TradingView Style Errors <span id="errCount"></span></div>
+<div id="errList"><div class="err">No errors. Paste code and tap Fix. Or upload screenshot.</div></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/javascript/javascript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+let editor=CodeMirror.fromTextArea(document.getElementById('codeArea'),{lineNumbers:true,mode:'javascript',theme:'dracula',indentUnit:4,tabSize:4,lineWrapping:true});
+fetch('fixes.json').then(r=>r.json()).then(j=>log('Loaded fixes.json: '+j.errors.length+' rules')).catch(()=>log('Upload fixes.json to repo'));
+function log(msg){const l=document.getElementById('errList');let d=document.createElement('div');d.className='err';d.textContent=msg;l.appendChild(d);}
+function clearErr(){document.getElementById('errList').innerHTML='';}
+async function pasteClip(){try{let t=await navigator.clipboard.readText();editor.setValue(t
